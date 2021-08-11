@@ -13,7 +13,6 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        1
         <form action="{{route('user.update', $old_userData->id)}}" method="POST">
             @csrf
             @method('PUT')
