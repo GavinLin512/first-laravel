@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\UserDataTable;
 use App\Http\Requests\StoreUserData;
 use App\Models\User;
 use App\Models\UserClient;
@@ -155,11 +156,11 @@ class UserController extends Controller
             $trimPassword = trim($validatedUserData['password']);
             $hasPassword = isset($trimPassword);
             // 判斷密碼是否為空值
-            $emptyPassword = empty($validatedUserData['password']);
+            $emptyPassword = empty($trimPassword);
             if ($trimPassword == null) {
                 dd(123);
             }
-            dd($trimPassword);
+            dd($trimPassword,$hasPassword, $emptyPassword);
 //            dd($emptyPassword);
             if ($hasPassword == true) {
 //                dd('123');

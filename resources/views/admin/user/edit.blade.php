@@ -45,8 +45,8 @@
 
                 <div class="form-group">
                     <label for="password">修改密碼</label>
-{{--                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="請輸入密碼">--}}
-                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="請輸入密碼" onkeyup="this.value=this.value.replace(/\s+/g,'')">
+                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="請輸入密碼">
+{{--                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="請輸入密碼" onkeyup="this.value=this.value.replace(/\s+/g,'')">--}}
                 </div>
 
                 @error('password')
@@ -55,8 +55,8 @@
 
                 <div class="form-group">
                     <label for="password-confirm">驗證修改後密碼</label>
-{{--                    <input type="password" class="form-control" id="password-confirm" name="password_confirmation" placeholder="請再次輸入密碼">--}}
-                    <input type="password" class="form-control" id="password-confirm" name="password_confirmation" placeholder="請再次輸入密碼" onkeyup="this.value=this.value.replace(/\s+/g,'')">
+                    <input type="password" class="form-control" id="password-confirm" name="password_confirmation" placeholder="請再次輸入密碼">
+{{--                    <input type="password" class="form-control" id="password-confirm" name="password_confirmation" placeholder="請再次輸入密碼" onkeyup="this.value=this.value.replace(/\s+/g,'')">--}}
                 </div>
 
                 <div class="form-group">
