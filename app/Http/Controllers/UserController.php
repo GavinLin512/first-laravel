@@ -40,6 +40,11 @@ class UserController extends Controller
         return view($this->index, compact('userData'));
     }
 
+    public function datatable(): \Illuminate\Http\JsonResponse
+    {
+        return datatables()->eloquent(User::query())->toJson();
+    }
+
     /**
      * Show the form for creating a new resource.
      *

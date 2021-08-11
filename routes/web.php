@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 //Route::get('/admin/user', [UserController::class, 'user']);
 Route::resource('user', \App\Http\Controllers\UserController::class);
+Route::get('user-data','UserController@datatable')->name('user.datatable');
 //Route::resource('test',\App\Http\Controllers\TestController::class);
 Auth::routes();
 
