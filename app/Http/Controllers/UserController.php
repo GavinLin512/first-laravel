@@ -61,15 +61,27 @@ class UserController extends Controller
 //          datatables(User::query())->toJson());
 //        dd(datatables());
         // 將資料做關聯後得到的 Model 再去藉由 eloquent 呼叫並轉換成 json
-        $user = User::query()->with('userClient')->select('users.*');
-//        $user = User::query()->leftJoin(function('userClient')->select('users.*');
-//        dd(json_decode(datatables()->eloquent($user)->toJson()));
-        return datatables()->eloquent($user)
-            ->rawColumns('action')
-            ->addColumn('edit',function (){
-                return ;
+        $users = User::query()->with('userClient')->select('users.*');
+//        dd($users);
+        return datatables()->eloquent($users)
+            // rawColumns 內的 column 必須是 array
+            ->rawColumns(['action'])
+            ->addColumn('action',function (User $user){
+//                dd($user->id);
+
+                // 用 $user 去抓 id
+                // 可以去用''寫 route 在裡面，或是用.去串接 php 的語法
+                // 如果寫在這就要用a標籤，herf="'.route('name',parameter).'"，如果要從前端用 ajax 去抓就要用 button?
+                // 如果 form 要寫在這，前端 ajax 就要回傳一個 success
+                // 如果不寫在這，就要去用隱藏的 input 改參數去回傳資料
+                return '<a href="'.route('user.edit', $user->id).'" type="button" class="btn btn-block btn-outline-primary btn-xs edit-btn">編輯</a>
+                         <form action="'.route('user.destroy',$user->id).'" method="DELETE">
+                         <button type="submit" class="btn btn-block btn-outline-danger btn-xs mt-2 del-btn">刪除</button>
+                         </form>';
             })
-            ->addColumn('delete', '<a href="" type="button" class="btn btn-block btn-outline-primary btn-xs">刪除</a>')
+//            ->addColumn('action', function (User $users){
+//                return '<a href="" class="btn btn-xs btn-danger">delete</a>';
+//            })
             ->toJson();
 //        ->addColumn('phone', 'userClient.phone')
     }
@@ -150,7 +162,7 @@ class UserController extends Controller
     public function edit($id)
     {
         //
-        $old_userData = User::with('client')->find($id);
+        $old_userData = User::with('userClient')->find($id);
 //        dd($old_userData);
         return view($this->edit, compact('old_userData'));
     }
@@ -228,6 +240,8 @@ class UserController extends Controller
     {
         //
         $old_userData = User::find($id);
+//                dd($old_userData);
+
         if ($old_userData->client) {
             $old_userData->client->delete();
         }

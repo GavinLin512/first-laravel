@@ -61,12 +61,12 @@
 
                 <div class="form-group">
                     <label for="phone">修改聯絡電話</label>
-                    <input type="number" class="form-control" id="phone" name="phone" placeholder="請輸入密碼" value="{{ $old_userData ->client-> phone??'' }}">
+                    <input type="number" class="form-control" id="phone" name="phone" placeholder="請輸入密碼" value="{{ $old_userData ->userClient-> phone??'' }}">
                 </div>
 
                 <div class="form-group">
                     <label for="address">修改通訊地址</label>
-                    <textarea class="form-control" id="address" name="address" rows="5" placeholder="請輸入地址">{{ $old_userData ->client-> address??'' }}</textarea>
+                    <textarea class="form-control" id="address" name="address" rows="5" placeholder="請輸入地址">{{ $old_userData ->userClient-> address??'' }}</textarea>
                 </div>
             </div>
             <!-- /.card-body -->
