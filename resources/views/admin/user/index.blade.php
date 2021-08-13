@@ -19,26 +19,26 @@
             <th>操作</th>
         </tr>
         </thead>
-        <tbody>
-        @foreach($userData as $key => $userData)
-        <tr>
-            <td>{{ $userData->name }}</td>
-            <td>{{ $userData->role??'' }}</td>
-            <td>{{ $userData->email }}</td>
-            <td>{{ $userData->client->phone??'' }}</td>
-            <td>{{ $userData->client->address??'' }}</td>
-            <td>
-                <a href="{{ route('user.edit', $userData->id) }}" type="button" class="btn btn-block btn-outline-primary btn-xs">編輯</a>
-                <form action="{{ route('user.destroy', $userData->id) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-block btn-outline-danger btn-xs mt-2">刪除</button>
-                </form>
+{{--        <tbody>--}}
+{{--        @foreach($userData as $key => $userData)--}}
+{{--        <tr>--}}
+{{--            <td>{{ $userData->name }}</td>--}}
+{{--            <td>{{ $userData->role??'' }}</td>--}}
+{{--            <td>{{ $userData->email }}</td>--}}
+{{--            <td>{{ $userData->client->phone??'' }}</td>--}}
+{{--            <td>{{ $userData->client->address??'' }}</td>--}}
+{{--            <td>--}}
+{{--                <a href="{{ route('user.edit', $userData->id) }}" type="button" class="btn btn-block btn-outline-primary btn-xs">編輯</a>--}}
+{{--                <form action="{{ route('user.destroy', $userData->id) }}" method="POST">--}}
+{{--                    @csrf--}}
+{{--                    @method('DELETE')--}}
+{{--                    <button type="submit" class="btn btn-block btn-outline-danger btn-xs mt-2">刪除</button>--}}
+{{--                </form>--}}
 
-            </td>
-        </tr>
-        @endforeach
-        </tbody>
+{{--            </td>--}}
+{{--        </tr>--}}
+{{--        @endforeach--}}
+{{--        </tbody>--}}
         <tfoot>
         <tr>
             <th>姓名</th>
@@ -55,7 +55,34 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('#user').DataTable();
+            $('#user').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": "{{ route('user.list') }}",
+                "columns": [
+                    {
+                        "data":"name",
+                    },
+                    {
+                        "data":"role",
+                    },
+                    {
+                        "data":"email",
+                    },
+                    {
+                        "data":"user_client.phone",
+                        "defaultContent":""
+                    },
+                    {
+                        "data":"user_client.address",
+                        "defaultContent":""
+                    },
+                    {
+                        "data":'action',
+                    }
+                ]
+            });
+            // console.log($('#user').DataTable())
         } );
     </script>
 @endsection

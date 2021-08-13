@@ -42,7 +42,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function client(){
-        return $this->hasOne('App\Models\UserClient', 'user_id', 'id');
+    public function userClient(){
+//        return $this->hasOne('App\Models\UserClient', 'user_id', 'id');
+        return $this->hasOne(UserClient::class, 'user_id', 'id');
     }
 }

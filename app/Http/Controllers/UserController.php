@@ -35,14 +35,43 @@ class UserController extends Controller
     public function index()
     {
         //
-        $userData = User::with('client')->get();
+        $userData = User::with('userClient')->get();
+//        dd($userData);
 
         return view($this->index, compact('userData'));
+//        return view($this->index);
     }
 
-    public function datatable(): \Illuminate\Http\JsonResponse
+    public function getUsers(Request $request)
     {
-        return datatables()->eloquent(User::query())->toJson();
+//          dd(123);
+
+//          $userData = [
+//              'name' => 'admin',
+//              'email' => 'admin@gmail.com',
+//              'password' => bcrypt('12345678'),
+//              'role' => 'admin'
+//          ];
+//          $jsonUserData = json_encode($userData);
+////          dd($jsonUserData);
+//          return response($jsonUserData);
+//        return datatables()->of(User::query())->toJson();
+//        dd(datatables()->eloquent(User::query())->toJson(),
+//          datatables()->of(User::query())->toJson(),
+//          datatables(User::query())->toJson());
+//        dd(datatables());
+        // 將資料做關聯後得到的 Model 再去藉由 eloquent 呼叫並轉換成 json
+        $user = User::query()->with('userClient')->select('users.*');
+//        $user = User::query()->leftJoin(function('userClient')->select('users.*');
+//        dd(json_decode(datatables()->eloquent($user)->toJson()));
+        return datatables()->eloquent($user)
+            ->rawColumns('action')
+            ->addColumn('edit',function (){
+                return ;
+            })
+            ->addColumn('delete', '<a href="" type="button" class="btn btn-block btn-outline-primary btn-xs">刪除</a>')
+            ->toJson();
+//        ->addColumn('phone', 'userClient.phone')
     }
 
     /**
@@ -109,6 +138,7 @@ class UserController extends Controller
     public function show($id)
     {
         //
+//        dd($id);
     }
 
     /**

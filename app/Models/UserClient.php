@@ -15,6 +15,6 @@ class UserClient extends Model
     ];
 
     public function user() {
-        return $this->hasOne('App\Models\User', 'id', 'user_id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }
