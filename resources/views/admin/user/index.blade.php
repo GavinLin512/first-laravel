@@ -96,11 +96,15 @@
                     // {
                     //     "data":"action",
                     // }
-                ]
+                ],
+                success: function () {
+                    let del_btn = document.querySelector('.del-btn');
+
+                }
             });
-            // 必須寫在 ready 之內，datatable 之後才取得到
-            let del_btn = document.querySelector('.del-btn');
-            console.log(del_btn);
+            // 必須寫在 ready 之內，但是 ajax 送出後並沒有回傳，所以這裡還是抓不到 class
+            // let del_btn = document.querySelector('.del-btn');
+            // console.log(del_btn);
             // del_btn.addEventListener('click', function () {
             //     // $.ajax({
             //     //     success: function(response){
