@@ -40,6 +40,9 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        // 自定義時間戳格式
+        'created_at' => 'datetime:Y-m-d',
+
     ];
 
     public function userClient(){

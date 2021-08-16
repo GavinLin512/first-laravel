@@ -66,6 +66,7 @@ class UserController extends Controller
         return datatables()->eloquent($users)
             // rawColumns 內的 column 必須是 array
             ->rawColumns(['action'])
+            // $user 這個變數儲存了 User Model 內的所有資料
             ->addColumn('action',function (User $user){
 //                dd($user->id);
 
@@ -74,11 +75,27 @@ class UserController extends Controller
                 // 如果寫在這就要用a標籤，herf="'.route('name',parameter).'"，如果要從前端用 ajax 去抓就要用 button?
                 // 如果 form 要寫在這，前端 ajax 就要回傳一個 success
                 // 如果不寫在這，就要去用隱藏的 input 改參數去回傳資料
-                return '<a href="'.route('user.edit', $user->id).'" type="button" class="btn btn-block btn-outline-primary btn-xs edit-btn">編輯</a>
-                         <form action="'.route('user.destroy',$user->id).'" method="DELETE">
-                         <button type="submit" class="btn btn-block btn-outline-danger btn-xs mt-2 del-btn">刪除</button>
-                         </form>';
+                $btn = '<div class="d-flex"><a href="'.route('user.edit', $user->id).'" type="button" class="btn btn-block btn-outline-primary btn-xs edit-btn">編輯</a>';
+                $btn .= '<button type="submit" data-id="'.$user->id.'" class="btn btn-block btn-outline-danger btn-xs mt-0 ml-2 del-btn">刪除</button></div>';
+                return $btn;
             })
+            // 修改欄位的 definition 值，直接指到該關聯的欄位名稱
+            ->editColumn('user_client.phone', function (User $user){
+                // ?? 代表 if 前面這些東西如果不存在，我就做後面的事
+                return $user->userClient->phone??"(空)";
+                // 這個寫法基本上意思同上，但
+//                return $user->userClient->phone?$user->userClient->phone:'1234';
+            })
+//            ->editColumn('created_at',function(User $user){
+////                return $user->created_at->toDateTimeString();
+//                return $user->created_at;
+//            })
+            ->editColumn('updated_at', function (User $user){
+                return $user->updated_at->toDateTimeString();
+            })
+//            ->addColumn( 'create_1', function (User $user){
+//                return $user->created_at;
+//            })
 //            ->addColumn('action', function (User $users){
 //                return '<a href="" class="btn btn-xs btn-danger">delete</a>';
 //            })
@@ -205,15 +222,17 @@ class UserController extends Controller
             // 判斷密碼是否為空值
             $emptyPassword = empty($trimPassword);
             if ($trimPassword == null) {
-                dd(123);
+//                dd(123);
             }
-            dd($trimPassword,$hasPassword, $emptyPassword);
+//            dd($trimPassword,$hasPassword, $emptyPassword);
 //            dd($emptyPassword);
             if ($hasPassword == true) {
 //                dd('123');
                 if ($emptyPassword == false) {
-//                    dd('456');
+                    dd('456');
                     $user->password = Hash::make($validatedUserData['password']);
+                } else {
+
                 }
             }
             // 判斷變數是否有被改變
@@ -239,17 +258,21 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
-        $old_userData = User::find($id);
+//        $status = '您已成功刪除此筆會員資料';
+//        return  redirect()->route('user.index')->with(['message' => $status]);
+        $old_userData = User::with('userClient')->find($id);
 //                dd($old_userData);
 
-        if ($old_userData->client) {
-            $old_userData->client->delete();
+        if ($old_userData->userClient) {
+            $old_userData->userClient->delete();
         }
 
 //        dd($old_userData);
         $old_userData->delete();
 
-        $status = '您已成功刪除此筆會員資料';
-        return  redirect()->route('user.index')->with(['message' => $status]);
+        // 因為用 ajax 的方式去獲取資料，所以 redirect 會回傳一個 302 found ，表示不是透過 ajax 去獲取的頁面
+        // 必須在 ajax 成功的時候 ( Http Status 200 ) 去回傳頁面
+//        $status = '您已成功刪除此筆會員資料';
+//        return  redirect()->route('user.index')->with(['message' => $status]);
     }
 }

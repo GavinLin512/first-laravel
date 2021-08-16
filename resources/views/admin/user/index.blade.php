@@ -16,6 +16,8 @@
             <th>信箱</th>
             <th>電話</th>
             <th>地址</th>
+            <th>建立於</th>
+            <th>更新於</th>
             <th>操作</th>
         </tr>
         </thead>
@@ -46,6 +48,8 @@
             <th>信箱</th>
             <th>電話</th>
             <th>地址</th>
+            <th>建立於</th>
+            <th>更新於</th>
             <th>操作</th>
         </tr>
         </tfoot>
@@ -63,7 +67,11 @@
             }
         });
         $(document).ready(function() {
-            $('#user').DataTable({
+            setTimeout(function (){
+                $('#message').remove();
+            }, 3000);
+
+             let table = $('#user').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('user.list') }}",
@@ -79,40 +87,87 @@
                     },
                     {
                         data:"user_client.phone",
-                        defaultContent:""
+                        defaultContent:"",
+                        searchable:false,
+                        orderable:false,
                     },
                     {
                         data:"user_client.address",
-                        defaultContent:""
+                        defaultContent:"",
+                        searchable:false,
+                        orderable:false,
+                    },
+                    {
+                        data:"created_at",
+                    },
+                    {
+                        data:"updated_at"
                     },
                     {
                         // 指定某個欄位排序
                         // name:"role",
+                        // button 也可以長在這
                         data:"action",
                         // 不可被排序及搜尋
-                        searchable:"false",
-                        ordering:'false'
+                        searchable:false,
+                        orderable:false,
                     },
-                    // {
-                    //     "data":"action",
-                    // }
                 ],
-                success: function () {
-                    let del_btn = document.querySelector('.del-btn');
-
+                language:{
+                    processing:'資料處理中...'
                 }
+
+
             });
-            // 必須寫在 ready 之內，但是 ajax 送出後並沒有回傳，所以這裡還是抓不到 class
-            // let del_btn = document.querySelector('.del-btn');
-            // console.log(del_btn);
-            // del_btn.addEventListener('click', function () {
-            //     // $.ajax({
-            //     //     success: function(response){
-            //     //         console.log(response)
-            //     //     }
-            //     // })
-            //     console.log('aaa');
-            // });
+            // console.log($('table'));
+            // $('.del-btn').on('click').each(function (){
+            //     console.log($(this).data('id'))});
+            // 選到已經生成的 table 標籤，
+           $('table').on('click','.del-btn', function (){
+               // console.log( $(this).data('id'));
+               let user_id = $(this).data('id');
+               Swal.fire({
+                   title: '確定要刪除此筆資料嗎?',
+                   text: "此項操作不可逆!",
+                   icon: 'warning',
+                   showCancelButton: true,
+                   confirmButtonColor: '#3085d6',
+                   cancelButtonColor: '#d33',
+                   confirmButtonText: '確定刪除?',
+                   cancelButtonText:'取消'
+               }).then((result) => {
+                   if (result.isConfirmed) {
+                       Swal.fire(
+                           '已刪除!',
+                           '您所選的資料已被刪除',
+                           'success'
+                       )
+                       $.ajax({
+                           type:"POST",
+                           // 可能不支援此方法(?
+                           // method:"delete",
+                           url:"user"+'/'+ user_id,
+                           data:{
+                               // 生成隱藏的 form 表單並傳入 method 與 value
+                               _method:'DELETE',
+                               // _token:'token'
+                               // success 不是寫在 data 內，他是 ajax 的參數
+                               // success: function (response){
+                               //     console.log(response);
+                               // },
+                           },
+                           success:function (){
+                               // console.log(response)
+                               // 匯出 table 刪除過後的 datatable
+                               table.draw()
+                           },
+                       })
+                   }
+
+               })
+               // console.log(user_id);
+
+           });
         } );
 
         // 必須解決拿到 id 的問題，或許用data-set?

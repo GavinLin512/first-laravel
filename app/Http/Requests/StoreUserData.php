@@ -45,6 +45,7 @@ class StoreUserData extends FormRequest
                 'email' => ['required', 'string', 'email', 'max:255'],
 //                'email' => 'required|string|email|max:255',
             // 判斷空白鍵，空白鍵為特殊字元，有隱藏字串\n，但不會經過 required 驗證
+                // nullable 放最後判斷，順序會影響
                 'password' => ['string', 'min:8', 'confirmed','nullable'],
                 'role' => ['required'],
                 'phone' => ['required'],
