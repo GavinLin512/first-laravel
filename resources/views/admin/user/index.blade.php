@@ -78,6 +78,7 @@
                 columns: [
                     {
                         data:"name",
+                        name:"role"
                     },
                     {
                         data:"role",
@@ -104,6 +105,7 @@
                         data:"updated_at"
                     },
                     {
+                        // action 要寫在前面就是要把 function 寫在 data 裏，用 data-id 抓 id
                         // 指定某個欄位排序
                         // name:"role",
                         // button 也可以長在這
