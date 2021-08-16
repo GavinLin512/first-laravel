@@ -70,6 +70,7 @@
                 columns: [
                     {
                         data:"name",
+                        name:"role"
                     },
                     {
                         data:"role",
@@ -86,6 +87,7 @@
                         defaultContent:""
                     },
                     {
+                        // action 要寫在前面就是要把 function 寫在 data 裏，用 data-id 抓 id
                         // 指定某個欄位排序
                         // name:"role",
                         data:"action",
