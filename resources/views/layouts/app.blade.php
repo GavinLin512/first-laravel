@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">
     {{-- datatable --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    {{-- jquery ui --}}
+    <link rel="stylesheet" href="{{ asset('css/jquery-ui.min.css') }}">
     @yield('css')
 </head>
 <body>
@@ -116,7 +118,12 @@
     {{-- datatable --}}
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    {{-- sweetalert --}}
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- jquery ui --}}
+    {{-- jquery 會衝突 --}}
+    {{-- <script src="{{ asset('js/jquery ui/external/jquery/jquery.js') }}"></script>--}}
+    <script src="{{ asset('js/jquery ui/jquery-ui.min.js') }}"></script>
     @yield('js')
 </body>
 </html>

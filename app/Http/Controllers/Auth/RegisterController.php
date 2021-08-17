@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserClient;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -53,6 +54,8 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'phone' => ['required', 'string', 'digits:10'],
+            'address' => ['required', 'string', 'max:255']
         ]);
     }
 
@@ -61,13 +64,38 @@ class RegisterController extends Controller
      *
      * @param  array  $data
      * @return \App\Models\User
+     * @return \App\Models\UserClient
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+//        dd($data);
+        // $data 是已經經過驗證的資料
+        // transaction:資料庫交易，若有任何一步出錯，將返回上一動作，不會新增資料到DB
+        // RegistersUsers.php 內有寫到，他會抓這個 $request 資料，並不是驗證過的，並且登入
+        // 登入時找不到回傳 User Model 的資料，才會報錯登入為 null
+         $user = \DB::transaction(function ()use ($data){
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'role' => $data['role'],
+            ]);
+
+//        dd($user);
+
+            UserClient::create([
+                'user_id' => $user->id,
+                'phone' => $data['phone'],
+                'address' => $data['address'],
+            ]);
+            // 回傳 create 的資料
+//             dd($user);
+            return $user;
+        });
+        // 回傳 create User 這個 Model 的資料
+        return $user;
+//        dd($userClient);
+//        $user->save();
+//        $userClient->save();
     }
 }

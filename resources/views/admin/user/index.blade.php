@@ -8,6 +8,14 @@
 
 @section('main')
     <a href="{{ route('user.create') }}" type="button" class="btn btn-block btn-success btn-sm w-25 mb-3">新增會員資料</a>
+        <div class="d-flex mb-2">
+            <span class="my-auto mr-2">選擇日期區間:</span>
+            <input type="text" name="date" id="date_start" class="date">
+            <span class="my-auto mx-2">~</span>
+            <input type="text" name="date" id="date_end" class="date">
+            <button class="btn btn-warning btn-sm ml-3 search-btn">查詢資料清單</button>
+        </div>
+
     <table id="user" class="display " style="width:100%">
         <thead>
         <tr>
@@ -74,7 +82,34 @@
              let table = $('#user').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('user.list') }}",
+                ajax: {
+                    url:"{{ route('user.list') }}",
+                    data: function (d){
+                                let date_start = $( "#date_start" ).datepicker( "getDate" );
+                                let date_end = $( "#date_end" ).datepicker( "getDate" );
+                        console.log(date_start)
+                                d.extra_search = date_start.val();
+                        // d 是 function 內的參數，用 d.variable 去自訂要回傳 ajax 的參數
+                        console.log(d);
+                        // datepicker 要寫在 controller 去判斷(?
+                        // $( ".date" ).datepicker({
+                        //     onSelect: function (){
+                        //         let date_start = $( "#date_start" ).datepicker( "getDate" );
+                        //         let date_end = $( "#date_end" ).datepicker( "getDate" );
+                        //         // console.log(date_end, date_start)
+                        //         $(".search-btn").on("click", function (){
+                        //             // console.log($.datepicker.formatDate("yy-mm-dd", date_start), $.datepicker.formatDate("yy-mm-dd",date_end));
+                        //             let f_date_start = $.datepicker.formatDate("yy-mm-dd", date_start);
+                        //             let f_date_end = $.datepicker.formatDate("yy-mm-dd",date_end);
+                        //             table
+                        //                 .columns(3)
+                        //                 .search('admin')
+                        //                 .draw();
+                        //         })
+                        //     }
+                        // });
+                    },
+                },
                 columns: [
                     {
                         data:"name",
@@ -192,5 +227,20 @@
         //     })
         //     console.log('aaa');
         // });
+    </script>
+    <script>
+        // $( ".date" ).datepicker({
+        //     onSelect: function (){
+        //         let date_start = $( "#date_start" ).datepicker( "getDate" );
+        //         let date_end = $( "#date_end" ).datepicker( "getDate" );
+        //         // console.log(date_end, date_start)
+        //         $(".search-btn").on("click", function (){
+        //             console.log($.datepicker.formatDate("yy-mm-dd", date_start), $.datepicker.formatDate("yy-mm-dd",date_end))
+        //         });
+        //     }
+        // });
+
+
+
     </script>
 @endsection
