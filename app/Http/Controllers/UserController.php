@@ -6,6 +6,7 @@ use App\DataTables\UserDataTable;
 use App\Http\Requests\StoreUserData;
 use App\Models\User;
 use App\Models\UserClient;
+use Carbon\Carbon;
 use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -38,6 +39,7 @@ class UserController extends Controller
         $userData = User::with('userClient')->get();
 //        dd($userData);
 
+
         return view($this->index, compact('userData'));
 //        return view($this->index);
     }
@@ -60,8 +62,46 @@ class UserController extends Controller
 //          datatables()->of(User::query())->toJson(),
 //          datatables(User::query())->toJson());
 //        dd(datatables());
+
+//        dd($request->all());
+        // 這兩句是一樣的意思
+//        dd(User::all(),User::query()->get());
+        // 透過 Model 本身的 query builder 去做 where 的查詢後，get 資料(判斷條件用字串的方式串接)
+        // 缺點是當判斷或查詢條件過多時，維護及修改上非常耗時
+//        dd(UserClient::where('user_id', '>', 0)->get());
+        // 透過 Model 內自定義的 query builder function 去作條件判斷，再 get 資料
+//        dd(UserClient::FindUser_id(0,"!=")->get());
+//        $filtered = User::whereBetween('created_at', [$request['date_start'],$request['date_end']]);
+//        dd($filtered);
+
+//        $ds = Carbon::createFromFormat('Y-m-d H:i:s', '2018-07-25 12:45:16');
+
+//        Carbon::parse($ds)->startOfDay();
+//        $dd = Carbon::parse('2018-07-25 12:45:16')->startOfDay();
+//        dd($ds);
+//        $ds->startOfDay();
+//        $de = Carbon::createFromFormat('Y-m-d H:i:s', $request['date_end']);
+//        $de->endOfDay();
         // 將資料做關聯後得到的 Model 再去藉由 eloquent 呼叫並轉換成 json
-        $users = User::query()->with('userClient')->select('users.*');
+        $users = User::query()
+                ->with('userClient')
+                // 兩個做法，一是直接給 datepicker 預設的初始值
+                // 二是在這邊去判斷，欄位若是 null，就顯示所有資料
+                // $users->whereBetween('created_at', [$request['date_start']??'',$request['date_end']]);
+                ->select('users.*');
+        // 時間格式要與資料匹配，為了設定 startOfDay 與 endOfDay ，使用 Carbon::createFromFormat 設定
+        // 但這樣會因為預設沒有值報錯
+//        $dt = Carbon::createFromFormat('Y-m-d', $request['date_start']);
+//        $de = Carbon::createFromFormat('Y-m-d', $request['date_end']);
+        if (($request['date_start'] != null) && ($request['date_end'] != null)) {
+            // 有值的時候才設定
+            $dt = Carbon::createFromFormat('Y-m-d', $request['date_start']);
+            $de = Carbon::createFromFormat('Y-m-d', $request['date_end']);
+            $users->whereBetween('created_at', [$dt->startOfDay(),$de->endOfDay()]);
+        }
+
+//        dd($ds);
+//        dd($request['date_start']);
 //        dd($users);
         return datatables()->eloquent($users)
             // rawColumns 內的 column 必須是 array
@@ -86,10 +126,10 @@ class UserController extends Controller
                 // 這個寫法基本上意思同上，但
 //                return $user->userClient->phone?$user->userClient->phone:'1234';
             })
-//            ->editColumn('created_at',function(User $user){
-////                return $user->created_at->toDateTimeString();
-//                return $user->created_at;
-//            })
+            ->editColumn('created_at',function(User $user){
+//                return $user->created_at->toDateTimeString();
+                return $user->created_at->toDateString();
+            })
             ->editColumn('updated_at', function (User $user){
                 return $user->updated_at->toDateTimeString();
             })
