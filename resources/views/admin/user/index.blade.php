@@ -6,7 +6,8 @@
 
 @endsection
 
-@section('main')
+@section('content')
+<div class="container pt-5">
     <a href="{{ route('user.create') }}" type="button" class="btn btn-block btn-success btn-sm w-25 mb-3">新增會員資料</a>
     <div class="d-flex mb-2">
         <span class="my-auto mr-2">選擇日期區間:</span>
@@ -62,10 +63,12 @@
         </tr>
         </tfoot>
     </table>
+</div>
 @endsection
 
 @section('js')
     <script>
+        moment().format();
         $.ajaxSetup({
             headers: {
                 // 去拿
@@ -231,7 +234,17 @@
                     table.draw();
                 } else {
                     Swal.fire('請先選擇日期區間');
-                }
+                };
+
+
+                // 用 moment.js 讓前端直接擋掉選擇錯誤
+                let m_start = moment($("#date_start").val());
+                let m_end = moment($("#date_end").val());
+                // console.log(m_start, m_end)
+                // console.log(m_start.diff(m_end), m_end.diff(m_start))
+                if (m_end.diff(m_start) < 0 ) {
+                    Swal.fire('選擇錯誤，請重新選擇日期區間');
+                };
             });
 
             // 同時選擇兩個 input 去 onSelect，同時去做 onclick 事件監聽

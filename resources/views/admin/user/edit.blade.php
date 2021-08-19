@@ -6,7 +6,7 @@
 
 @endsection
 
-@section('main')
+@section('content')
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">編輯會員資料</h3>

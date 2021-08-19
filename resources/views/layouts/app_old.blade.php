@@ -124,6 +124,8 @@
     {{-- jquery 會衝突 --}}
     {{-- <script src="{{ asset('js/jquery ui/external/jquery/jquery.js') }}"></script>--}}
     <script src="{{ asset('js/jquery ui/jquery-ui.min.js') }}"></script>
+    {{-- moment.js --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" referrerpolicy="no-referrer"></script>
     @yield('js')
 </body>
 </html>

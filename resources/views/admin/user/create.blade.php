@@ -6,7 +6,7 @@
 
 @endsection
 
-@section('main')
+@section('content')
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">新增會員資料</h3>
@@ -50,7 +50,7 @@
                 @error('password')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
-
+.
                 <div class="form-group">
                     <label for="password-confirm">驗證密碼</label>
                     <input type="password" class="form-control" id="password-confirm" name="password_confirmation" placeholder="請再次輸入密碼">
