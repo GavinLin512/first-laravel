@@ -67,6 +67,6 @@
 @stop
 
 @section('adminlte_js')
-    @stack('js')
+{{--    @stack('js')--}}
     @yield('js')
 @stop
